@@ -1,0 +1,199 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{cmap}
+\usepackage{pgfplots}
+\usepackage{float}
+\pgfplotsset{compat=1.7}% <-- moves axis labels near ticklabels (respects tick label widths)
+
+\newcommand{\stdplot}[2]{
+    \begin{tikzpicture}
+    \begin{axis}[
+        axis x line=middle,
+        axis y line=left,
+        xlabel=$x$, ylabel=$\mu 1$,
+        width=16cm,
+        height=8cm,
+        cycle list={ }
+    ]
+    \addplot table {#1};
+    \legend{#2}
+    \end{axis}
+    \end{tikzpicture}
+}
+\newcommand{\triplot}[4]{
+    \begin{tikzpicture}
+    \begin{axis}[
+        axis x line=middle,
+        axis y line=left,
+        xlabel=$x$, ylabel=$\mu 1$,
+        width=16cm,
+        height=8cm,
+        cycle list={ }
+    ]
+    \addplot table {#1};
+    \addplot[densely dotted] table {#2};
+    \addplot[dashed] table {#3};
+    \legend{#4}
+    \end{axis}
+    \end{tikzpicture}
+}
+
+\usepackage{geometry} % пакет для установки полей
+\geometry{top=3cm} % отступ сверху
+\geometry{bottom=3cm} % отступ снизу
+\geometry{left=2cm} % отступ справа
+\geometry{right=2cm} % отступ слева
+
+\begin{document}
+
+\section{Постановка задачи}
+
+\begin{equation}\label{eq:fmu}
+f(x) = \mu_1
+\end{equation}
+
+\begin{enumerate}
+    \item Реализовать программу, строящую график значений функции \ref{eq:fmu}, при этом высота окна фильтра равна высоте изображения, а ширина задается пользователем. Также шаг перемещения фильтра по изображению задается пользователем.
+    \item Сделать анализ характерных точек графика.
+    \item Реализовать возможность предобработки изображения, с использованием трех типов медианного фильтра. Размер фильтра задается пользователем.
+\end{enumerate}
+
+\begin{figure}[H]
+    \center{
+        \includegraphics[width=6cm]{1.png} %[width=8cm]
+        \includegraphics[width=6cm]{2.png}
+        \includegraphics[resolution=100]{3.png}
+        % \triplot{./graphs/appTestSmall1}{./graphs/appTestMid1}{./graphs/appTestLarge1}{app=4, app=10, app=16}
+    }
+    \caption{Исходные изображения}
+\end{figure}
+
+\section{Выполнение}
+Реализуем программу, отвечающую заданным требованиям. Исходный код программы приведен в приложении.
+Рассмотрим график функции \ref{eq:fmu}. Для большей наглядности наложим график на исходное изображение.
+
+\begin{figure}[H]
+    \center{
+        \includegraphics[resolution=100]{./images/appTestMid1_img.png} 
+        \includegraphics[resolution=100]{./images/appTestSmall2_img.png} 
+        \includegraphics[resolution=100]{./images/appTestSmall3_img.png} 
+        \caption{Примеры графиков функции \ref{eq:fmu}}
+    }
+\end{figure}
+
+\begin{figure}
+    \center{
+        \stdplot{./graphs/appTestMid1}{app=10 step=1}
+    }
+    \caption{Пример графика для 1 изображения}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \stdplot{./graphs/appTestSmall2}{app=4 step=1}
+    }
+    \caption{Пример графика для 2 изображения}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \stdplot{./graphs/appTestSmall3}{app=4 step=1}
+    }
+    \caption{Пример графика для 3 изображения}
+\end{figure}
+
+Как можно видеть из приведенных изображений и графиков, на границе двух символов функция имеет локальный минимум или локальный максимум.
+
+\subsection{Рассмотрим влияние размера апертуры фильтра на поведение графика}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/appTestSmall1}{./graphs/appTestMid1}{./graphs/appTestLarge1}{app=4, app=10, app=16}
+    }
+    \caption{Влияние размера апертуры фильтра для 1-го изображения}
+    \label{img:app1}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/appTestSmall2}{./graphs/appTestMid2}{./graphs/appTestLarge2}{app=4, app=10, app=16}
+    }
+    \caption{Влияние размера апертуры фильтра для 2-го изображения}
+    \label{img:app2}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/appTestSmall3}{./graphs/appTestMid3}{./graphs/appTestLarge3}{app=4, app=10, app=16}
+    }
+    \caption{Влияние размера апертуры фильтра для 3-го изображения}
+    \label{img:app3}
+\end{figure}
+
+См рис \ref{img:app1}, \ref{img:app2} и \ref{img:app3}.
+
+Как видно из графиков, для всех изображений с увеличением апертуры увеличиваются локальные максимумы и минимумы в абсолютных значениях, при этом сглаживаются небольшие шумы на графике.
+
+\subsection{Рассмотрим влияние шага перемещения апертуры фильтра на графики}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/stepTestSmall1}{./graphs/stepTestMid1}{./graphs/stepTestLarge1}{step=1, step=8, step=15}
+    }
+    \caption{Влияние шага перемещения апертуры для 1-го изображения}
+    \label{img:step1}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/stepTestSmall2}{./graphs/stepTestMid2}{./graphs/stepTestLarge2}{step=1, step=8, step=15}
+    }
+    \caption{Влияние шага перемещения апертуры для 2-го изображения}
+    \label{img:step2}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/stepTestSmall3}{./graphs/stepTestMid3}{./graphs/stepTestLarge3}{step=1, step=8, step=15}
+    }
+    \caption{Влияние шага перемещения апертуры для 3-го изображения}
+    \label{img:step3}
+\end{figure}
+
+См рис \ref{img:step1}, \ref{img:step2} и \ref{img:step3}.
+
+Как видно из графиков, при увеличении шага перемещения апертуры существенно снижается точность определения границ символов по графику, так как он становится более пологим и ступенчатым.
+
+\subsection{Влияние предобработки изображения с использованием медианного фильтра на поведение графика}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/medianCross1}{./graphs/medianPlus1}{./graphs/medianSquare1}{cross, plus, square}
+    }
+    \caption{Влияние формы медианного фильтра для 1-го изображения}
+    \label{img:med1}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/medianCross2}{./graphs/medianPlus2}{./graphs/medianSquare2}{cross, plus, square}
+    }
+    \caption{Влияние формы медианного фильтра для 2-го изображения}
+    \label{img:med2}
+\end{figure}
+
+\begin{figure}
+    \center{
+        \triplot{./graphs/medianCross3}{./graphs/medianPlus3}{./graphs/medianSquare3}{cross, plus, square}
+    }
+    \caption{Влияние формы медианного фильтра для 3-го изображения}
+    \label{img:med3}
+\end{figure}
+
+См рис \ref{img:med1}, \ref{img:med2} и \ref{img:med3}.
+
+Как видно из графиков применение медианного фильтра к изображениям, содержащим символы с заливкой их внутренних областей, почти не сказывается на поведении графика. Применение же фильтра к изображению, содержащему символы без внутренней заливки снижает шум на графике и способствует более четкому выделению максимумов и минимумов, находящихся на границе двух символов. 
+
+
+\end{document}
