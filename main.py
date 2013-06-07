@@ -184,48 +184,11 @@ if options.recognition:
     for mask in masks:
       ref_responses[-1].append(response(mask, C))
 
-  # print ref_responses
-
   points = getMinMaxPoints(values, xRange)
-
 
   candidate_rects = []
 
   letters = patterns_files
-
-  # pattern_img = Image.open(patterns_dir + "A.png").convert('L')
-  # pattern_data = pattern_img.load()
-
-  # idata = im.load()
-
-  # asd = map(lambda x: x-1, pattern_img.size)
-  # print asd
-  # C_mask = collectFrame([0,0] + asd, pattern_data)
-  # C = collectFrame((49, 0, 76, 79), idata)
-
-  # print response(masks[0], C) - response(masks[0], C_mask)
-  # s = 0
-  # for x in xrange(28):
-  #   for y in xrange(80):
-  #     s += pattern_data[x, y] - idata[49+x, y]
-
-  # print s     
-
-
-  # C = collectFrame((77, 0, 101, 79), idata)
-  # C = collectFrame((49, 0, 77, 79), data, reverse_data=True)
-
-  # deltas = []
-  # for l in xrange(len(ref_responses)):
-  #   letter_responses = ref_responses[l]
-  #   currentDelta = 0
-  #   for i in xrange(len(masks)):
-  #     currentDelta += math.fabs(response(masks[i], C) - letter_responses[i])
-  #   deltas.append(currentDelta)
-
-  # print letters[deltas.index(min(deltas))]
-
-
 
   for x1 in points:
     for x2 in points:
@@ -235,7 +198,6 @@ if options.recognition:
 
   deltas = [] # набор разниц с образцами для каждого ректа   
   for rect in candidate_rects:
-    # print rect
     C = collectFrame(rect, data, reverse_data=True)
 
     deltas.append([])
@@ -255,8 +217,9 @@ if options.recognition:
   lettersCount = int(options.letters)
 
   deltas_symbols = sorted(deltas_symbols, key=lambda x: x[0][1])[:lettersCount]
-  deltas_symbols = map(lambda item: item[0][0], sorted(deltas_symbols, key=lambda x: (x[1][0] + x[1][2]) / 2.0))
-  print deltas_symbols
+  deltas_symbols = sorted(deltas_symbols, key=lambda x: (x[1][0] + x[1][2]) / 2.0)
+  for item in deltas_symbols:
+    print item[0][0][0], (item[1][0], item[1][2])
 
   exit()
 
