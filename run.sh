@@ -42,6 +42,8 @@ python main.py -s 1 -a 4 3.png -m square -o medianSquare3
 #python main.py -gr -s 4 -a 10 1.png --maxw 65 --letters 8
 #python main.py -gr -s 4 -a 10 2.png --maxw 35 --letters 6
 #python main.py -gr -s 2 -a 8 3.png --maxw 35 --minw 10 --letters 5
+# python main.py -gr -s 2 -a 10 4.png --maxw 35 --minw 10 --letters 7
 
 
 #python main.py -gl -s 2 -a 12 3.png --maxw 35 --minw 7
+# python main.py -gl -s 2 -a 10 new.png --maxw 35 --minw 10
